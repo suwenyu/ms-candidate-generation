@@ -1,11 +1,24 @@
 # open data file
-def openFile():
+def openFiledData():
 	fname = 'data-1.txt'
 	with open(fname) as f:
 	    content = f.readlines()
 
 	content = [x.strip() for x in content]
 	return content
+
+def openFilePara():
+	fname = 'para1-1.txt'
+	with open(fname) as f:
+		content = f.readlines()
+
+	content = [x.strip() for x in content]
+	for line in content:
+		#print(str.find("(",0))
+		if "(" and ")" in line:
+			item=line[line.index("(")+1:line.index(")")]
+			value=line[line.index("=")+1:]
+			dictRaw[int(item)]=float(value)
 
 # preprocess data format
 def preProcessing_data(line):
@@ -49,7 +62,7 @@ def getFirstFeq(firstEle, ori_dataSet, ori_dataSet_len):
 	
 	F1 = []
 	for key , val in dictionary.iteritems():
-		if val/float(ori_dataSet_len) >= 0.5:
+		if val/float(ori_dataSet_len) >= dictRaw[firstEle[key][0]]:
 			F1.append(firstEle[key])
 	return F1
 
@@ -57,7 +70,12 @@ def getFirstFeq(firstEle, ori_dataSet, ori_dataSet_len):
 
 if __name__ == "__main__":
 	
-	content = openFile()
+	content = openFiledData()
+
+	dictRaw = dict()
+	mis = openFilePara()
+	# print dictRaw
+
 
 	dataSet = list()
 	ori_dataSet = list()
