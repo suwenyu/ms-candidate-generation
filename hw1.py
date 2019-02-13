@@ -32,16 +32,21 @@ def preProcessing_data(line):
 
 
 def x_in_y(query, base):
-    try:
-        l = len(query)
-    except TypeError:
-        l = 1
-        query = type(base)((query,))
+	l = len(query)*[0]
+	i = 0
+	if len(query) < 1:
+		return False
+	
+	for j in range(len(base)):
+		if i >= len(query):
+			break
+		if i > len(query):
+			break
+		if query[i] == base[j]:
+			l[i] = 1
+			i+=1
 
-    for i in range(len(base)):
-        if base[i:i+l] == query:
-            return True
-    return False
+	return not (0 in l)
 
 def getFirstEle(data):
 	return ([ firstEle.append([i])  for i in data if [i] not in firstEle])
@@ -64,9 +69,58 @@ def getFirstFeq(firstEle, ori_dataSet, ori_dataSet_len):
 	for key , val in dictionary.iteritems():
 		if val/float(ori_dataSet_len) >= dictRaw[firstEle[key][0]]:
 			F1.append(firstEle[key])
-	return F1
 
+	return F1, dictionary
 
+# only 2 element
+def candidateGen(F1, dictionary, dictRaw, ele, ori_dataSet_len):
+    c2=[]
+    finalc2=[]
+   
+    for item in range(len(F1)):
+    	for tmpitem in range(item+1, len(F1)):
+    		if abs(dictionary[item]/float(ori_dataSet_len) - dictionary[tmpitem]/float(ori_dataSet_len)) <= 0.05:
+    			c2.append([[F1[item][0], F1[tmpitem][0]]])
+    
+    for element in c2:
+        finalc2.append(element)
+        finalc2.append([[element[0][0]],[element[0][1]]])
+    # print finalc2
+    return finalc2
+
+def findcandiCount(C2, ori_dataSet, dictRaw):
+	finaloutput=[]
+
+	for sublst in C2:
+		count = 0
+		# print sublst
+
+		for sequence in ori_dataSet:
+			flag = False
+			
+			# if len(sublst) == 1:
+			# 	for subseq in sequence:
+			# 		for i in sublst:
+			# 			if x_in_y(i, subseq):
+			# 				flag = True
+			# 				count+=1
+			# 				break
+
+			# 		if flag:
+			# 			break
+			# else:
+			i = 0
+			l = len(sublst)*[0]
+			for subseq in sequence:
+				if i >= len(sublst):
+					break
+				if x_in_y(sublst[i], subseq):
+					l[i] = 1
+					i+=1
+			if not (0 in l):
+				count += 1
+
+		print sublst, count
 
 if __name__ == "__main__":
 	
@@ -85,8 +139,10 @@ if __name__ == "__main__":
 	result = map(getFirstEle, dataSet)
 	firstEle.sort()
 
-	result = getFirstFeq(firstEle, ori_dataSet, len(ori_dataSet) )
-	print result
+	F1, dictionary = getFirstFeq(firstEle, ori_dataSet, len(ori_dataSet) )
+	# print F1
 
 
+	C2 = candidateGen(F1, dictionary, dictRaw, firstEle, len(ori_dataSet))
+	findcandiCount(C2, ori_dataSet, dictRaw)
 
