@@ -3,7 +3,7 @@ import copy
 # open data file
 SDC=0.05
 def openFiledData():
-	fname = 'data-1.txt'
+	fname = 'data-2.txt'
 	with open(fname) as f:
 	    content = f.readlines()
 
@@ -11,7 +11,7 @@ def openFiledData():
 	return content
 
 def openFilePara():
-	fname = 'para1-1.txt'
+	fname = 'para1-2.txt'
 	with open(fname) as f:
 		content = f.readlines()
 
@@ -168,21 +168,24 @@ def joinCandidate(F):
 			b = copy.deepcopy(F[j])
 			# print a, b
 			
-			# pophead(a)
-			# poptail(b)
-			if pophead(a) == poptail(b):
-				# print "1"
-				# print a
-				# print "2"
-				# print b
+			test1 = pophead(a)
+			test2 = poptail(b)
+			# print test1
+			if test1 == test2:
+
 				if len(b[-1]) > 1:
 					# print b[-1]
 					
 					if len(a) == 1:
-						a[0].pop()
+						# print a, b
+						head = a[0].pop(0)
+						# print head
+						tail = b[0].pop()
+						a = [[head] + test1[0]+ [tail]]
+						# print a
 					else:
 						a.pop()
-				a.append(b[-1])
+						a.append(b[-1])
 				
 					# a.append(b[-1])
 
@@ -258,9 +261,11 @@ if __name__ == "__main__":
 
 	final = findcandiCount(C2, ori_dataSet, dictRaw)
 
-	
+	while(len(final)!=0):
 	# print final
-	F3 = joinCandidate(final)
-	# print F3
-	print pruningCandidate(F3, final)
+		Fk = joinCandidate(final)
+		# print F3
+		Ck = pruningCandidate(Fk, final)
+		final = findcandiCount(Ck, ori_dataSet, dictRaw)
+	
 
