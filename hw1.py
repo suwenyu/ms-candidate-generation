@@ -1,6 +1,7 @@
 import copy
 
 # open data file
+SDC=0.05
 def openFiledData():
 	fname = 'data-1.txt'
 	with open(fname) as f:
@@ -21,7 +22,10 @@ def openFilePara():
 			item=line[line.index("(")+1:line.index(")")]
 			value=line[line.index("=")+1:]
 			dictRaw[int(item)]=float(value)
-
+		else: 
+			global SDC
+			SDC=float(line[line.index("=")+1:])
+			# print SDC
 # preprocess data format
 def preProcessing_data(line):
 	tmp = []
@@ -75,13 +79,14 @@ def getFirstFeq(firstEle, ori_dataSet, ori_dataSet_len):
 	return F1, dictionary
 
 # only 2 element
-def candidateGen(F1, dictionary, dictRaw, ele, ori_dataSet_len):
+def candidateGen(F1, dictionary, dictRaw, ele, ori_dataSet_len, SDC):
     c2=[]
     finalc2=[]
-   
+    print SDC
     for item in range(len(F1)):
-    	for tmpitem in range(item+1, len(F1)):
-    		if abs(dictionary[item]/float(ori_dataSet_len) - dictionary[tmpitem]/float(ori_dataSet_len)) <= 0.05:
+    	for tmpitem in range(len(F1)):
+    		# if item!=tmpitem:
+    		if abs(dictionary[item]/float(ori_dataSet_len) - dictionary[tmpitem]/float(ori_dataSet_len)) <= SDC:
     			c2.append([[F1[item][0], F1[tmpitem][0]]])
     
     for element in c2:
@@ -126,11 +131,14 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 					i+=1
 			if not (0 in l):
 				count += 1
-
+		temp_count=0
 		# print count/float(len(ori_dataSet)), minVal
 		if count/float(len(ori_dataSet)) > minVal:
 			finaloutput.append(sublst)
+			print sublst, count
+			# temp_count+=1
 		# print sublst, count, minVal
+	# print temp_count
 	return finaloutput
 
 def pophead(item):
@@ -203,10 +211,14 @@ if __name__ == "__main__":
 	firstEle.sort()
 
 	F1, dictionary = getFirstFeq(firstEle, ori_dataSet, len(ori_dataSet) )
-	# print F1
+	# print  dictionary
 
 
-	C2 = candidateGen(F1, dictionary, dictRaw, firstEle, len(ori_dataSet))
+
+	C2 = candidateGen(F1, dictionary, dictRaw, firstEle, len(ori_dataSet), SDC)
+
 	final = findcandiCount(C2, ori_dataSet, dictRaw)
-	# print final
+	print len(final)
+	# for i in final:
+	# 	print i
 	joinCandidate(final)
