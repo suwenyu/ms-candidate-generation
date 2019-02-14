@@ -1,3 +1,5 @@
+import copy
+
 # open data file
 def openFiledData():
 	fname = 'data-1.txt'
@@ -93,7 +95,12 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 
 	for sublst in C2:
 		count = 0
-		# print sublst
+		minVal = 1
+		for a in sublst:
+			for b in a:
+				if dictRaw[b] < minVal:
+					minVal = dictRaw[b]
+
 
 		for sequence in ori_dataSet:
 			flag = False
@@ -120,7 +127,63 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 			if not (0 in l):
 				count += 1
 
-		print sublst, count
+		# print count/float(len(ori_dataSet)), minVal
+		if count/float(len(ori_dataSet)) > minVal:
+			finaloutput.append(sublst)
+		# print sublst, count, minVal
+	return finaloutput
+
+def pophead(item):
+	tmp = copy.deepcopy(item)
+	if len(tmp[0]) == 1:
+		tmp.pop(0)
+	else:
+		tmp[0].pop(0)
+	return tmp
+
+def poptail(item):
+	tmp = copy.deepcopy(item)
+	# print len(tmp[len(tmp)-1])
+	if len(tmp[len(tmp)-1]) == 1:
+		tmp.pop()
+	else:
+		tmp[len(tmp)-1].pop()
+	return tmp
+
+
+def joinCandidate(F):
+	candidate = list()
+	for i in range(len(F)):
+		for j in range(len(F)):
+
+			a = copy.deepcopy(F[i])
+			b = copy.deepcopy(F[j])
+			# print a, b
+			
+			# pophead(a)
+			# poptail(b)
+			if pophead(a) == poptail(b):
+				# print "1"
+				# print a
+				# print "2"
+				# print b
+				if len(b[-1]) > 1:
+					# print b[-1]
+					
+					if len(a) == 1:
+						a[0].pop()
+					else:
+						a.pop()
+				a.append(b[-1])
+				
+					# a.append(b[-1])
+
+				if a not in candidate:
+					# print "3"
+					candidate.append(a)
+
+	return candidate
+# joinCandidate([[[1],[2],[3]],[[1],[2,5]],[[1],[5],[3]],[[2],[3],[4]],[[2,5],[3]],[[3],[4],[5]],[[5],[3,4]]])
 
 if __name__ == "__main__":
 	
@@ -144,5 +207,6 @@ if __name__ == "__main__":
 
 
 	C2 = candidateGen(F1, dictionary, dictRaw, firstEle, len(ori_dataSet))
-	findcandiCount(C2, ori_dataSet, dictRaw)
-
+	final = findcandiCount(C2, ori_dataSet, dictRaw)
+	# print final
+	joinCandidate(final)
