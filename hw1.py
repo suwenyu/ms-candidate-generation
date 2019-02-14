@@ -183,7 +183,46 @@ def joinCandidate(F):
 					candidate.append(a)
 
 	return candidate
-# joinCandidate([[[1],[2],[3]],[[1],[2,5]],[[1],[5],[3]],[[2],[3],[4]],[[2,5],[3]],[[3],[4],[5]],[[5],[3,4]]])
+
+
+def pruningCandidate(L, F):
+	# print F
+	can = list()
+	for line in L:
+		# print line
+		
+		flag = True
+
+		for i in range(len(line)):
+			tmp = copy.deepcopy(line)
+			if len(tmp[i]) > 1:
+				for j in range(len(tmp[i])):
+					test = copy.deepcopy(tmp)
+					test[i].pop(j)
+					# print j
+					# print test
+					if test not in F:
+						flag = False
+			else:
+				tmp.pop(i)
+				test = tmp
+				# print test
+				if test not in F:
+					flag = False
+		# print flag
+
+		if flag == True:
+			can.append(line)
+	return can
+
+
+# F3 = [[[1],[2],[3]],[[1],[2,5]],[[1],[5],[3]],[[2],[3],[4]],[[2,5],[3]],[[3],[4],[5]],[[5],[3,4]]]
+# test = [[[1,2],[4]], [[1,2],[5]], [[1],[4,5]], [[1,4],[6]], [[2],[4,5]], [[2],[4],[6]]]
+# L = joinCandidate(F3)
+# pruningCandidate(L, F3)
+
+# L = joinCandidate(test)
+# pruningCandidate(L, test)
 
 if __name__ == "__main__":
 	
@@ -208,5 +247,8 @@ if __name__ == "__main__":
 
 	C2 = candidateGen(F1, dictionary, dictRaw, firstEle, len(ori_dataSet))
 	final = findcandiCount(C2, ori_dataSet, dictRaw)
+	
 	# print final
-	joinCandidate(final)
+	F3 = joinCandidate(final)
+	# print F3
+	print pruningCandidate(F3, final)
