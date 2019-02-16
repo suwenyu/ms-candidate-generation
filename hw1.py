@@ -32,6 +32,7 @@ def preProcessing_data(line):
 	while len(line)!=1:
 		test = [ (int(i)) for i in (line[line.find("{")+1:line.find("}")].split(', ')) ]
 		line = line[line.find("}")+1:]
+		test.sort()
 		tmp.append(test)
 		dataSet.append(test)
 	ori_dataSet.append(tmp)
@@ -123,7 +124,9 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 			# else:
 			i = 0
 			l = len(sublst)*[0]
+
 			for subseq in sequence:
+				
 
 				if i >= len(sublst):
 					break
@@ -135,6 +138,7 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 		temp_count=0
 		# print count/float(len(ori_dataSet)), minVal
 		# print sublst, count
+		# print sublst
 
 		if count/float(len(ori_dataSet)) > minVal:
 			out = "<"
@@ -143,7 +147,7 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 				# print lst
 				# for a in lst:
 				# 	print a
-				out_data = ','.join(str(x) for x in lst)
+				out_data = ', '.join(str(x) for x in lst)
 				# print out_data
 				out += "{" + out_data + "}"
 			out += ">"
@@ -281,7 +285,8 @@ if __name__ == "__main__":
 	firstEle.sort()
 
 	F1, dictionary = getFirstFeq(firstEle, ori_dataSet, len(ori_dataSet) )
-	# print  dictionary
+	for i in dictionary:
+		print "<{%d}>     count: %d" % (F1[i][0], dictionary[i])
 
 
 
@@ -289,6 +294,7 @@ if __name__ == "__main__":
 
 	
 	final = findcandiCount(C2, ori_dataSet, dictRaw)
+	print len(final)
 	
 	while(len(final)!=0):
 	# print final
@@ -296,8 +302,14 @@ if __name__ == "__main__":
 		Fk = joinCandidate(final)
 		print len(Fk)
 
+
 		Ck = pruningCandidate(Fk, final)
 		print len(Ck)
+
+		if [[6],[1],[13]] in Ck:
+			print "HIII"
+			break
+
 		final = findcandiCount(Ck, ori_dataSet, dictRaw)
 		print len(final)
 	
