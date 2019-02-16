@@ -3,7 +3,7 @@ import copy
 # open data file
 SDC=0.05
 def openFiledData():
-	fname = 'data-2.txt'
+	fname = 'data-1.txt'
 	with open(fname) as f:
 	    content = f.readlines()
 
@@ -11,7 +11,7 @@ def openFiledData():
 	return content
 
 def openFilePara():
-	fname = 'para1-2.txt'
+	fname = 'para1-1.txt'
 	with open(fname) as f:
 		content = f.readlines()
 
@@ -82,7 +82,7 @@ def getFirstFeq(firstEle, ori_dataSet, ori_dataSet_len):
 def candidateGen(F1, dictionary, dictRaw, ele, ori_dataSet_len, SDC):
     c2=[]
     finalc2=[]
-    print SDC
+    # print SDC
     for item in range(len(F1)):
     	for tmpitem in range(len(F1)):
     		# if item!=tmpitem:
@@ -124,6 +124,7 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 			i = 0
 			l = len(sublst)*[0]
 			for subseq in sequence:
+
 				if i >= len(sublst):
 					break
 				if x_in_y(sublst[i], subseq):
@@ -133,11 +134,23 @@ def findcandiCount(C2, ori_dataSet, dictRaw):
 				count += 1
 		temp_count=0
 		# print count/float(len(ori_dataSet)), minVal
+		# print sublst, count
+
 		if count/float(len(ori_dataSet)) > minVal:
+			out = "<"
 			finaloutput.append(sublst)
-			print sublst, count
+			for lst in sublst:
+				# print lst
+				# for a in lst:
+				# 	print a
+				out_data = ','.join(str(x) for x in lst)
+				# print out_data
+				out += "{" + out_data + "}"
+			out += ">"
+				# print lst
+			print "%s     count: %d" % (out, count)
 			# temp_count+=1
-		# print sublst, count, minVal
+			# print sublst, count
 	# print temp_count
 	return finaloutput
 
@@ -168,30 +181,45 @@ def joinCandidate(F):
 			b = copy.deepcopy(F[j])
 			# print a, b
 			
+
 			test1 = pophead(a)
 			test2 = poptail(b)
 			# print test1
+			
 			if test1 == test2:
+				# print a, b
+				# print test1, test2
+
+				if len(a[0]) > 1:
+					test1[0].insert(0, a[0][0])
+				else:
+					test1.insert(0, [a[0][0]])
 
 				if len(b[-1]) > 1:
-					# print b[-1]
-					
-					if len(a) == 1:
-						# print a, b
-						head = a[0].pop(0)
-						# print head
-						tail = b[0].pop()
-						a = [[head] + test1[0]+ [tail]]
-						# print a
-					else:
-						a.pop()
-						a.append(b[-1])
+					test1[-1].append(b[-1][-1])
+				else:
+					test1.append([b[-1][-1]])
 				
+				# if len(b[-1]) > 1:
+				# 	# print b[-1]
+					
+				# 	if len(a) == 1:
+				# print test1
+				# 		head = a[0].pop(0)
+				# 		# print head
+				# 		tail = b[0].pop()
+				# 		a = [[head] + test1[0]+ [tail]]
+				# 		# print a
+				# 	else:
+				# 		a.pop()
+				# 		a.append(b[-1])
+				# else:
+				# 	a.append(b[-1])
 					# a.append(b[-1])
-
-				if a not in candidate:
+				# print a
+				if test1 not in candidate:
 					# print "3"
-					candidate.append(a)
+					candidate.append(test1)
 
 	return candidate
 
@@ -259,13 +287,18 @@ if __name__ == "__main__":
 
 	C2 = candidateGen(F1, dictionary, dictRaw, firstEle, len(ori_dataSet), SDC)
 
+	
 	final = findcandiCount(C2, ori_dataSet, dictRaw)
-
+	
 	while(len(final)!=0):
 	# print final
+		print "=============="
 		Fk = joinCandidate(final)
-		# print F3
+		print len(Fk)
+
 		Ck = pruningCandidate(Fk, final)
+		print len(Ck)
 		final = findcandiCount(Ck, ori_dataSet, dictRaw)
+		print len(final)
 	
 
