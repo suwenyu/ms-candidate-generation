@@ -3,7 +3,7 @@ import copy
 # open data file
 SDC=0.05
 def openFiledData():
-	fname = 'data-1.txt'
+	fname = 'data-2.txt'
 	with open(fname) as f:
 	    content = f.readlines()
 
@@ -11,7 +11,7 @@ def openFiledData():
 	return content
 
 def openFilePara():
-	fname = 'para1-1.txt'
+	fname = 'para1-2.txt'
 	with open(fname) as f:
 		content = f.readlines()
 
@@ -85,14 +85,24 @@ def candidateGen(F1, dictionary, dictRaw, ele, ori_dataSet_len, SDC):
     finalc2=[]
     # print SDC
     for item in range(len(F1)):
-    	for tmpitem in range(len(F1)):
+    	if dictionary[item]/float(ori_dataSet_len) >= dictRaw[ F1[item][0]]:
+    		for tmpitem in range(len(F1)):
+    			
+    		# 	print abs(dictionary[item]/float(ori_dataSet_len) - dictionary[tmpitem]/float(ori_dataSet_len))
     		# if item!=tmpitem:
-    		if abs(dictionary[item]/float(ori_dataSet_len) - dictionary[tmpitem]/float(ori_dataSet_len)) <= SDC:
-    			c2.append([[F1[item][0], F1[tmpitem][0]]])
-    
+    		
+	    		# if (dictionary[tmpitem]/float(ori_dataSet_len) >= dictRaw[ F1[item][0]]) and abs(dictionary[item]/float(ori_dataSet_len) - dictionary[tmpitem]/float(ori_dataSet_len)) <= SDC:
+	    		# 	c2.append([[F1[item][0], F1[tmpitem][0]]])
+	    		if (dictionary[tmpitem]/float(ori_dataSet_len) >= dictRaw[ F1[tmpitem][0]]):
+	    			# if F1[tmpitem] == [90]:
+    				# 	print F1[item], F1[tmpitem]
+	    			c2.append([[F1[item][0], F1[tmpitem][0]]])
+	    
+    # print c2
     for element in c2:
         finalc2.append(element)
         finalc2.append([[element[0][0]],[element[0][1]]])
+    
     # print finalc2
     return finalc2
 
@@ -180,14 +190,66 @@ def joinCandidate(F):
 	candidate = list()
 	for i in range(len(F)):
 		for j in range(len(F)):
+			# print F[i], F[j]
 
 			a = copy.deepcopy(F[i])
 			b = copy.deepcopy(F[j])
+			
 			# print a, b
+			tmp = []
+			# if len(F[j][-1]) > 1:
+
+			# 	test1 = pophead(a)
+			# 	for index in range(len(F[j][-1])):
+			# 		test2 = copy.deepcopy(b)
+			# 		popitem = test2[-1].pop(index)
+					
+			# 		# 
+			# 		if test1 == test2:
 			
 
+			# 			if len(a[0]) > 1:
+			# 				test1[0].insert(0, a[0][0])
+			# 			else:
+			# 				test1.insert(0, [a[0][0]])
+
+						
+			# 			test1[-1].insert(index,popitem)
+						
+			# 			print test1
+			# 			if test1 not in candidate:
+			# 				# print "3"
+			# 				candidate.append(test1)
+			# 				# print test1
+
+			# if len(F[i][0]) > 1:
+			# 	print a, b
+
+			# 	test2 = poptail(b)
+			# 	for index in range(len(F[i][0])):
+			# 		test1 = copy.deepcopy(a)
+			# 		popitem = test1[0].pop(index)
+					
+			# 		# 
+			# 		if test1 == test2:
+
+			# 			test1[0].insert(index, popitem)
+						
+			# 			if len(b[-1]) > 1:
+			# 				test1[-1].append(b[-1][-1])
+			# 			else:
+			# 				test1.append([b[-1][-1]])
+
+			# 			print test1
+			# 			print ""
+			# 			if test1 not in candidate:
+			# 				# print "3"
+			# 				candidate.append(test1)
+
+			# else:
 			test1 = pophead(a)
 			test2 = poptail(b)
+			
 			# print test1
 			
 			if test1 == test2:
@@ -203,27 +265,12 @@ def joinCandidate(F):
 					test1[-1].append(b[-1][-1])
 				else:
 					test1.append([b[-1][-1]])
-				
-				# if len(b[-1]) > 1:
-				# 	# print b[-1]
-					
-				# 	if len(a) == 1:
-				# print test1
-				# 		head = a[0].pop(0)
-				# 		# print head
-				# 		tail = b[0].pop()
-				# 		a = [[head] + test1[0]+ [tail]]
-				# 		# print a
-				# 	else:
-				# 		a.pop()
-				# 		a.append(b[-1])
-				# else:
-				# 	a.append(b[-1])
-					# a.append(b[-1])
-				# print a
+
 				if test1 not in candidate:
-					# print "3"
 					candidate.append(test1)
+					# print test1
+
+
 
 	return candidate
 
@@ -261,7 +308,11 @@ def pruningCandidate(L, F):
 
 # F3 = [[[1],[2],[3]],[[1],[2,5]],[[1],[5],[3]],[[2],[3],[4]],[[2,5],[3]],[[3],[4],[5]],[[5],[3,4]]]
 # test = [[[1,2],[4]], [[1,2],[5]], [[1],[4,5]], [[1,4],[6]], [[2],[4,5]], [[2],[4],[6]]]
+# F3 = [[[1],[2]],[[1, 2]]]
 # L = joinCandidate(F3)
+# print L
+# print aaa
+
 # pruningCandidate(L, F3)
 
 # L = joinCandidate(test)
